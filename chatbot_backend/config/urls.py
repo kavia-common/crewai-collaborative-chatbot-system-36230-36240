@@ -23,7 +23,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Primary API mount
     path('api/', include('api.urls')),
+    # Root-level convenience mount to support clients calling "/sessions/", "/messages/", "/health/"
+    # This mirrors the /api/ routes at the root to avoid 404s if clients omit the /api prefix.
+    path('', include('api.urls')),
 ]
 
 schema_view = get_schema_view(
