@@ -45,12 +45,24 @@ schema_view = get_schema_view(
 )
 
 def get_full_url(request):
-    scheme = request.scheme
-    host = request.get_host()
-    forwarded_port = request.META.get("HTTP_X_FORWARDED_PORT")
+    """
+    Build an absolute base URL for OpenAPI docs that respects reverse proxy headers.
+    Priority:
+    1) X-Forwarded-Proto / X-Forwarded-Host / X-Forwarded-Port (set by proxy)
+    2) request.scheme / request.get_host()
+    """
+    # Prefer forwarded proto/host/port when present (common in kube/ingress setups)
+    proto = request.META.get("HTTP_X_FORWARDED_PROTO")
+    fhost = request.META.get("HTTP_X_FORWARDED_HOST")
+    fport = request.META.get("HTTP_X_FORWARDED_PORT")
 
-    if ':' not in host and forwarded_port:
-        host = f"{host}:{forwarded_port}"
+    # Fallbacks to request values
+    scheme = proto or request.scheme
+    host = fhost or request.get_host()
+
+    # If host already includes a port, keep it; otherwise append forwarded port if provided
+    if ":" not in host and fport:
+        host = f"{host}:{fport}"
 
     return f"{scheme}://{host}"
 

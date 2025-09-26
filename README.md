@@ -27,10 +27,12 @@ APIs (DRF):
   - POST /sessions/{session_id}/send/  body: {"content":"Hello"}
 
 Frontend integration notes:
-- If your frontend uses a dev proxy, point it to the backend base URL and include the /api prefix, e.g.:
-  REACT_APP_API_BASE=https://<backend-host>:3001/api
-- If the proxy strips /api, the root mirror ensures /sessions/ continues to work.
-- Ensure CORS is enabled; this backend sets CORS_ALLOW_ALL_ORIGINS=True for development.
+- Use the backend base URL with the /api prefix. For this environment:
+  REACT_APP_API_BASE_URL=https://vscode-internal-28521-beta.beta01.cloud.kavia.ai:3001/api
+  (If your frontend variable name differs, map it accordingly.)
+- If your frontend or dev proxy strips the /api prefix, the root mirror allows /sessions/ etc. to still work at the root.
+- Ensure CORS is enabled (this backend sets CORS_ALLOW_ALL_ORIGINS=True for development).
+- Double-check protocol/host/port in the frontend to match the running backend. Mismatches (e.g., http vs https, wrong port) commonly cause “Failed to fetch”.
 
 WebSocket (Channels):
 - ws://<host>/ws/chat/<session_id>/
