@@ -21,8 +21,11 @@ def health(request):
 
     Returns:
         200 OK with a simple message confirming server health.
+    Note:
+        Keep the response minimal to satisfy automated tests that check for exact equality.
+        API clients can assume "Ocean Professional" theme globally from README/style guide.
     """
-    return Response({"message": "Server is up!", "theme_hint": "Ocean Professional"})
+    return Response({"message": "Server is up!"})
 
 
 class ChatSessionViewSet(viewsets.ModelViewSet):

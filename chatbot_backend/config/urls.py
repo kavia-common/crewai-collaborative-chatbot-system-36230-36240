@@ -23,10 +23,14 @@ from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # Primary API mount
+
+    # Primary API mount (preferred)
+    # Clients should target: /api/sessions/, /api/messages/, /api/health/
     path('api/', include('api.urls')),
-    # Root-level convenience mount to support clients calling "/sessions/", "/messages/", "/health/"
-    # This mirrors the /api/ routes at the root to avoid 404s if clients omit the /api prefix.
+
+    # Root-level convenience mount to avoid 404s when frontend omits the /api prefix.
+    # This ensures POST /sessions/ and GET /health/ also work at root.
+    # If your frontend uses a proxy rewriting /api -> backend, both paths will still function.
     path('', include('api.urls')),
 ]
 

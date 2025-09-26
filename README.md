@@ -11,12 +11,26 @@ Key models:
 - RunLog: high-level run lifecycle and outcome, useful for analytics/debugging
 
 APIs (DRF):
-- GET /api/health/
-- POST /api/sessions/  body: {"session_id": "abc123", "title": "...", "user_id": "..."}
-- GET /api/sessions/{session_id}/
-- GET /api/sessions/{session_id}/history/
-- GET /api/sessions/{session_id}/state/
-- POST /api/sessions/{session_id}/send/  body: {"content":"Hello"}
+- Preferred base path: /api/
+  - GET /api/health/
+  - POST /api/sessions/  body: {"session_id": "abc123", "title": "...", "user_id": "..."}
+  - GET /api/sessions/{session_id}/
+  - GET /api/sessions/{session_id}/history/
+  - GET /api/sessions/{session_id}/state/
+  - POST /api/sessions/{session_id}/send/  body: {"content":"Hello"}
+- Convenience root mirror (to avoid 404s if frontend omits /api):
+  - GET /health/
+  - POST /sessions/
+  - GET /sessions/{session_id}/
+  - GET /sessions/{session_id}/history/
+  - GET /sessions/{session_id}/state/
+  - POST /sessions/{session_id}/send/  body: {"content":"Hello"}
+
+Frontend integration notes:
+- If your frontend uses a dev proxy, point it to the backend base URL and include the /api prefix, e.g.:
+  REACT_APP_API_BASE=https://<backend-host>:3001/api
+- If the proxy strips /api, the root mirror ensures /sessions/ continues to work.
+- Ensure CORS is enabled; this backend sets CORS_ALLOW_ALL_ORIGINS=True for development.
 
 WebSocket (Channels):
 - ws://<host>/ws/chat/<session_id>/
