@@ -1,0 +1,4 @@
+{
+    "command": "python manage.py test",
+    "working_directory": "/home/kavia/workspace/code-generation/crewai-collaborative-chatbot-system-36230-36240/chatbot_backend"
+}
